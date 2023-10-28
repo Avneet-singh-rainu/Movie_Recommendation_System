@@ -42,7 +42,6 @@ function App() {
               <p>Enter Movie Name </p>
               <input
                 type="text"
-                value={name}
                 name="name"
                 onChange={handleChange}
               />
@@ -50,7 +49,7 @@ function App() {
             <div className="movies">
               {data.map((item, key) => {
                 return (
-                  <div>
+                  <div key={key}>
                     <p>{item}</p>
                   </div>
                 );
