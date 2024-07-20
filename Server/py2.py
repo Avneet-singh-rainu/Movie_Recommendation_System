@@ -19,7 +19,7 @@ tfidf = vectorizer.fit_transform(df["clean_title"])
 # Read the ratings dataset
 ratings = pd.read_csv("ratings.csv")
 
-# Get the title from the command line arguments (for now, using a hardcoded title)
+# Get the title from the command line arguments
 title = sys.argv[1]
 #title = "toy story"
 title = re.sub("[^a-zA-Z0-9 ]", "", title)
