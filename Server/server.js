@@ -2,42 +2,56 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const cp = require("child_process");
 
 app.use(express.json());
-
 app.use(cors());
-//**************************************************************************************** */ */
-const port = process.env.PORT;
-const cp = require("child_process");
-const { configDotenv } = require("dotenv");
 
-
-//****************************************************************************************** */
+const port = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  res.status(200);
+  res.status(200).send("Welcome to the Movie Recommendation API");
 });
 
 app.post("/movie", async (req, res) => {
   try {
-    const namee = req.body.name;
+    const name = req.body.name;
 
-    const recomendations = 5;
-    const pythoncode = await cp.spawn("python", [
-      "pyth.py",
-      namee,
-      recomendations,
-    ]);
+    const pythonProcess = cp.spawn("python", ["py2.py", name]);
 
-    pythoncode.stdout.on("data", (data) => {
-      newSuggestion = JSON.parse(data);
-      res.status(200).json(newSuggestion.data);
+    let dataString = '';
+
+    pythonProcess.stdout.on("data", (data) => {
+      dataString += data.toString();
     });
+
+    pythonProcess.stdout.on("end", () => {
+      try {
+        console.log("Raw data from Python script:", dataString); // Debug print
+        const recommendations = JSON.parse(dataString);
+        res.status(200).json({ data: recommendations });
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+        res.status(500).json({ error: "Failed to parse recommendations" });
+      }
+    });
+
+    pythonProcess.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    pythonProcess.on("close", (code) => {
+      if (code !== 0) {
+        console.error(`Python process exited with code ${code}`);
+      }
+    });
+
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 app.listen(port, () => {
-  console.log("Server Started...");
+  console.log(`Server started on port ${port}`);
 });

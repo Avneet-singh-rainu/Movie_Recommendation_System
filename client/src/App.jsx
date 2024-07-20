@@ -1,18 +1,25 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import SkeletonMovie from "./SkeletonMovie";
 
 function App() {
-  const [name, setname] = useState();
-  const [data, setData] = useState(["Your Movies will be shown here!"]);
+  const [name, setName] = useState("");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setname(e.target.value);
+    setName(e.target.value);
   };
 
   const fetch = async () => {
-    const res = await axios.get("http://localhost:3000");
-    setData(res.data);
+    try {
+      const res = await axios.get("http://localhost:3000");
+      setData(res.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setData(["Failed to fetch data"]);
+    }
   };
 
   useEffect(() => {
@@ -21,47 +28,56 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     axios
-      .post("http://localhost:3000/movie", {
-        name,
-      })
+      .post("http://localhost:3000/movie", { name })
       .then((response) => {
-        setData(response.data);
+        console.log("Response data:", response.data);
+        if (Array.isArray(response.data.data)) {
+          setData(response.data.data);
+        } else {
+          setData(["No recommendations found!"]);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching recommendations:", error);
+        setData(["Failed to fetch recommendations. Please try again."]);
+        setLoading(false);
       });
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <div className="container">
-          <div className="head">
-            <h1>Movie Recommendation</h1>
-          </div>
-          <div className="body">
-            <div className="input">
-              <p>Enter Movie Name </p>
-              <input
-                type="text"
-                name="name"
-                onChange={handleChange}
-              />
-            </div>
-            <div className="movies">
-              {data.map((item, key) => {
-                return (
-                  <div key={key}>
-                    <p>{item}</p>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="search">
-              <button type="submit">Search</button>
-            </div>
-          </div>
-        </div>
+    <div className="app">
+      <header className="header">
+        <h1>Movie Recommendation</h1>
+      </header>
+      <form className="search-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Enter Movie Name"
+          value={name}
+          onChange={handleChange}
+        />
+        <button type="submit" className="search-button">
+          Search
+        </button>
       </form>
-    </>
+      <div className="movie-container">
+        {loading ? (
+          <SkeletonMovie />
+        ) : Array.isArray(data) ? (
+          data.map((item, key) => (
+            <div key={key} className="movie">
+              <p>{item}</p>
+            </div>
+          ))
+        ) : (
+          <p>{data}</p>
+        )}
+      </div>
+    </div>
   );
 }
 

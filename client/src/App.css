@@ -1,38 +1,65 @@
-*{
-    padding: 0;
-    margin: 0;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #141414;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
 }
 
-.container{
-    margin-top: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 20px;
+.app {
+  text-align: center;
 }
 
-.input{
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
+.header {
+  background-color: #e50914;
+  padding: 20px;
 }
 
-.movies{
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
+.header h1 {
+  margin: 0;
+  color: #ffffff;
 }
 
-.body{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column; 
-    gap: 40px;
+.search-form {
+  margin: 20px;
+}
+
+.search-input {
+  padding: 10px;
+  font-size: 16px;
+  width: 300px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #e50914;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.search-button:hover {
+  background-color: #f40612;
+}
+
+.movie-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px;
+}
+
+.movie {
+  background-color: #333333;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 20px;
+  width: 300px;
+  text-align: left;
+}
+
+.movie p {
+  margin: 0;
 }

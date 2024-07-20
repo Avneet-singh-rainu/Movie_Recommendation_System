@@ -7,7 +7,7 @@ column_names = ['movie_id', 'movie_title', 'release_date','video_release_date',
                 'Childrens','Comedy','Crime','Documentary','Drama','Fantasy',
                 'Film-Noir','Horror','Musical','Mystery','Romance','Sci-Fi',
                 'Thriller','War','Western']
-df = pd.read_csv('u.item', sep = '|', names = column_names, encoding='latin-1')
+df = pd.read_csv("u.item", sep = '|', names = column_names, encoding='latin-1')
 df
 
 df.loc[4]['movie_title']
@@ -58,6 +58,7 @@ resp={
 "data": data,
 "message": "This is the recommended recommendation for this movie"
 }
+
 
 print(json.dumps(resp))    # print will send  the data to js files
 
